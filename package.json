@@ -1,0 +1,29 @@
+{
+  "name": "dexon-dimax",
+	"version": "1.0.0",
+	"api_version": "1.0.0",
+	"description": "DEXON DIMAX",
+	"keywords": [
+		"Vision Mixer",
+		"Matrix"
+	],
+	"manufacturer": "DEXON",
+	"product": "DIMAX",
+	"shortname": "dimax",
+	"homepage": "https://github.com/bitfocus/companion-module-dexon-dimax#readme",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bitfocus/companion-module-dexon-dimax.git"
+	},
+	"author": "Andreas H. Thomsen <mc-hauge@hotmail.com>",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/bitfocus/companion-module-dexon-dimax/issues"
+	},
+	"dependencies": {
+	}
+}
