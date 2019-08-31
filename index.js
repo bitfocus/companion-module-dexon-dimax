@@ -25,14 +25,14 @@ instance.prototype.updateConfig = function(config) {
 	}
 
 	self.config = config;
-    self.init_tcp();
+		self.init_tcp();
 };
 
 instance.prototype.init = function() {
 	var self = this;
 
-    debug = self.debug;
-    log = self.log;
+		debug = self.debug;
+		log = self.log;
 
 	self.init_presets();
 	self.init_tcp();
@@ -82,16 +82,16 @@ instance.prototype.config_fields = function () {
 			label: 'Target IP',
 			width: 4,
 			regex: self.REGEX_IP
-        },
-        {
+				},
+				{
 			type: 'textinput',
 			id: 'port',
 			label: 'Target Port',
 			width: 2,
 			default: 6464,
 			regex: self.REGEX_PORT
-        },
-        {
+				},
+				{
 			type: 'text',
 			id: 'info',
 			label: 'Information',
@@ -104,16 +104,16 @@ instance.prototype.config_fields = function () {
 			label: 'Username',
 			width: 4,
 			default: 'Administrator'
-        },
+				},
 		{
 			type: 'textinput',
 			id: 'pass',
 			label: 'Password',
 			width: 4,
 			default: ''
-        }
+				}
 
-    ]
+		]
 };
 
 // When module gets deleted
@@ -124,14 +124,14 @@ instance.prototype.destroy = function() {
 		self.socket.destroy();
 	}
 
-	debug("destroy", self.id);;
+	debug("destroy", self.id);
 };
 
 instance.prototype.init_presets = function () {
 	var self = this;
 	var presets = [];
 
-    presets.push({
+		presets.push({
 		category: 'Login',
 		label: 'Login',
 		bank: {
@@ -157,7 +157,7 @@ instance.prototype.actions = function(system) {
 
 	self.system.emit('instance_actions', self.id, {
 
-        'login': {
+		'login': {
 			label: 'Login',
 			options: [{
 				type: 'text',
@@ -167,7 +167,6 @@ instance.prototype.actions = function(system) {
 				value: 'Please setup username and password in the config tab.'
 			}]
 		},
-
 		'recall_layout': {
 			label: 'Recall Layout',
 			options: [
@@ -188,8 +187,8 @@ instance.prototype.actions = function(system) {
 					label: 'Advance:',
 					default: 'No',
 					choices: [
-					  { id: 'Yes', label: 'Yes' },
-					  { id: 'No', label: 'No' },
+						{ id: 'Yes', label: 'Yes' },
+						{ id: 'No', label: 'No' },
 					]
 				},
 				{
@@ -198,13 +197,12 @@ instance.prototype.actions = function(system) {
 					label: 'Need ACK:',
 					default: 'No',
 					choices: [
-					  { id: 'Yes', label: 'Yes' },
-					  { id: 'No', label: 'No' },
+						{ id: 'Yes', label: 'Yes' },
+						{ id: 'No', label: 'No' },
 					]
 				}
 			]
 		},
-		
 		'switch_video': {
 			label: 'Switch Video',
 			options: [
@@ -236,8 +234,8 @@ instance.prototype.actions = function(system) {
 					label: 'Channel',
 					default: 'MAIN',
 					choices: [
-					  { id: 'PIP', label: 'PIP' },
-					  { id: 'MAIN', label: 'Main' },
+						{ id: 'PIP', label: 'PIP' },
+						{ id: 'MAIN', label: 'Main' },
 					]
 				}
 			]
@@ -278,8 +276,8 @@ instance.prototype.actions = function(system) {
 					label: 'Need ACK:',
 					default: 'Yes',
 					choices: [
-					  { id: 'Yes', label: 'Yes' },
-					  { id: 'No', label: 'No' },
+						{ id: 'Yes', label: 'Yes' },
+						{ id: 'No', label: 'No' },
 					]
 				},
 				{
@@ -299,25 +297,25 @@ instance.prototype.actions = function(system) {
 					label: 'Transition Type:',
 					default: 'Cut',
 					choices: [
-					  { id: 'Cut', label: 'Cut' },
-					  { id: 'Fade', label: 'Fade' },
+						{ id: 'Cut', label: 'Cut' },
+						{ id: 'Fade', label: 'Fade' },
 					]
 				}
 			]
 		}
-    });
+		});
 }
 
 instance.prototype.action = function(action) {
 	var self = this;
-	var cmd
-	var opt = action.options
+	var cmd;
+	var opt = action.options;
 
 	switch(action.action) {
-        
-        case 'login':
+
+		case 'login':
 			cmd = '<setup version="1" > <username>' + self.config.user + '</username> <password>' + self.config.pass + '</password> <needack>Yes</needack> </setup>';
-            break;
+			break;
 
 		case 'recall_layout':
 			cmd = '<recall_layout id="' + action.options.recall_id + '" advance="' + action.options.recall_advance + '" needack="' + action.options.recall_ack + '"/>';
@@ -330,23 +328,23 @@ instance.prototype.action = function(action) {
 		case 'switch_audio':
 			cmd = '<audio><connect input_id="' + action.options.switch_audio_input_id + '" output_id="' + action.options.switch_audio_output_id + '"/></audio>';
 			break;
-	
+
 		case 'transition_type':
 			cmd = '<config_misc needack="' + action.options.transition_type_ack + '"><transition duration="' + action.options.transition_type_duration + '">' + action.options.transition_type_type + '</transition></config_misc>';
 			break;
 	}
 
-    if (cmd !== undefined) {
+		if (cmd !== undefined) {
 
-        debug('sending ',cmd,"to",self.config.host);
+				debug('sending ',cmd,"to",self.config.host);
 
-        if (self.socket !== undefined && self.socket.connected) {
-            self.socket.send(cmd);
-        }
-        else {
-            debug('Socket not connected :(');
-        }
-    }
+				if (self.socket !== undefined && self.socket.connected) {
+						self.socket.send(cmd);
+				}
+				else {
+						debug('Socket not connected :(');
+				}
+		}
 }
 
 instance_skel.extendedBy(instance);
