@@ -82,16 +82,26 @@ instance.prototype.config_fields = function () {
 			label: 'Target IP',
 			width: 4,
 			regex: self.REGEX_IP
-				},
-				{
+		},
+		{
 			type: 'textinput',
 			id: 'port',
-			label: 'TCP Port',
-			width: 2,
+			label: 'TCP Port (Default: 6464)',
+			width: 4,
 			default: 6464,
 			regex: self.REGEX_PORT
-				},
-				{
+		},
+		{
+			type: 'dropdown',
+			id: 'need_ack',
+			label: 'Need ACK:',
+			default: 'Yes',
+			choices: [
+				{ id: 'Yes', label: 'Yes' },
+				{ id: 'No', label: 'No' },
+			]
+		},
+		{
 			type: 'text',
 			id: 'info',
 			label: 'Information',
@@ -104,16 +114,15 @@ instance.prototype.config_fields = function () {
 			label: 'Username',
 			width: 4,
 			default: 'Administrator'
-				},
+		},
 		{
 			type: 'textinput',
 			id: 'pass',
 			label: 'Password',
 			width: 4,
 			default: ''
-				}
-
-		]
+		}
+	]
 };
 
 // When module gets deleted
@@ -127,26 +136,35 @@ instance.prototype.destroy = function() {
 	debug("destroy", self.id);
 };
 
+instance.prototype.CHOICES_COMMANDS = [
+	{ id: 'login',						label: 'Force Login'},
+	{ id: 'recall_layout', 		label: 'Recall Layout'},
+	{ id: 'switch_video', 		label: 'Switch Video'},
+	{ id: 'switch_audio', 		label: 'Switch Audio'},
+	{ id: 'transition_type',	label: 'Transition Type'},
+];
+
 instance.prototype.init_presets = function () {
 	var self = this;
 	var presets = [];
+	var pstSize = '14';
 
+	for (var input in self.CHOICES_COMMANDS) {
 		presets.push({
-		category: 'Login',
-		label: 'Login',
-		bank: {
-			style: 'text',
-			text: 'Login',
-			size: '18',
-			color: '16777215',
-			bgcolor: self.rgb(0,204,0)
-		},
-		actions: [
-			{
-				action: 'login',
-			}
-		]
-	});
+			category: 'Commands',
+			label: self.CHOICES_COMMANDS[input].label,
+			bank: {
+				style: 'text',
+				text: self.CHOICES_COMMANDS[input].label,
+				size: pstSize,
+				color: '16777215',
+				bgcolor: self.rgb(0,0,0)
+			},
+			actions: [{	
+				action: self.CHOICES_COMMANDS[input].id, 
+			}],
+		});
+	}
 
 	self.setPresetDefinitions(presets);
 }
@@ -186,16 +204,6 @@ instance.prototype.actions = function(system) {
 					id: 'recall_advance',
 					label: 'Advance:',
 					default: 'No',
-					choices: [
-						{ id: 'Yes', label: 'Yes' },
-						{ id: 'No', label: 'No' },
-					]
-				},
-				{
-					type: 'dropdown',
-					id: 'recall_ack',
-					label: 'Need ACK:',
-					default: 'Yes',
 					choices: [
 						{ id: 'Yes', label: 'Yes' },
 						{ id: 'No', label: 'No' },
@@ -271,16 +279,6 @@ instance.prototype.actions = function(system) {
 			label: 'Transition Type',
 			options: [
 				{
-					type: 'dropdown',
-					id: 'transition_type_ack',
-					label: 'Need ACK:',
-					default: 'Yes',
-					choices: [
-						{ id: 'Yes', label: 'Yes' },
-						{ id: 'No', label: 'No' },
-					]
-				},
-				{
 					type: 'number',
 					id: 'transition_type_duration',
 					label: 'Duration:',
@@ -309,7 +307,7 @@ instance.prototype.actions = function(system) {
 instance.prototype.action = function(action) {
 	var self = this;
 	var cmd;
-	var login = '<setup version="1" > <username>' + self.config.user + '</username> <password>' + self.config.pass + '</password> <needack>Yes</needack> </setup> ';
+	var login = '<setup version="1" > <username>' + self.config.user + '</username> <password>' + self.config.pass + '</password> <needack>' + self.config.need_ack + '</needack> </setup> ';
 
 
 	switch(action.action) {
@@ -319,7 +317,7 @@ instance.prototype.action = function(action) {
 			break;
 
 		case 'recall_layout':
-			cmd = login + '<recall_layout id="' + action.options.recall_id + '" advance="' + action.options.recall_advance + '" needack="' + action.options.recall_ack + '"/>';
+			cmd = login + '<recall_layout id="' + action.options.recall_id + '" advance="' + action.options.recall_advance + '" needack="' + self.config.need_ack + '"/>';
 			break;
 
 		case 'switch_video':
