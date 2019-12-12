@@ -9,3 +9,6 @@
 **V1.0.2**
 * Added Presets
 * Modified config settings to match other DEXON modules
+
+**V1.0.3**
+* Fixed bug where the delay in 'transition_type' did not allow for 0.5 secconds, now it does

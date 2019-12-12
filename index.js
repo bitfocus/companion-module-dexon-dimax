@@ -282,12 +282,12 @@ instance.prototype.actions = function(system) {
 					type: 'number',
 					id: 'transition_type_duration',
 					label: 'Duration:',
-					min: 1,
-					max: 256,
+					min: 0,
+					max: 6000,
 					default: 1,
 					required: true,
 					range: false,
-					regex: self.REGEX_NUMBER
+					regex: '/(\W+\d|\d)+$/'
 				},
 				{
 					type: 'dropdown',
